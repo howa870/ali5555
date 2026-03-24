@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "motion/react";
+import { motion, AnimatePresence } from "framer-motion";
 import { ChevronUp } from "lucide-react";
 
 export function ScrollToTop() {
@@ -11,8 +11,6 @@ export function ScrollToTop() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
-
   return (
     <AnimatePresence>
       {visible && (
@@ -20,9 +18,8 @@ export function ScrollToTop() {
           initial={{ opacity: 0, scale: 0.5 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.5 }}
-          onClick={scrollToTop}
+          onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
           className="fixed bottom-24 right-6 z-50 bg-[#d4af37] hover:bg-[#c9a02e] text-black p-3 rounded-full shadow-xl transition-all duration-300 hover:scale-110"
-          aria-label="العودة للأعلى"
         >
           <ChevronUp className="w-5 h-5" />
         </motion.button>

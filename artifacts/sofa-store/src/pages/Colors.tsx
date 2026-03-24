@@ -1,4 +1,4 @@
-import { motion } from "motion/react";
+import { motion } from "framer-motion";
 import { Link } from "wouter";
 import { ArrowRight, Palette } from "lucide-react";
 import { ScrollToTop } from "../components/ScrollToTop";
@@ -46,47 +46,33 @@ export default function Colors() {
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white" dir="rtl">
       <ScrollToTop />
-
       <div className="py-20 px-4">
         <div className="max-w-7xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mb-12"
-          >
+          <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} className="mb-12">
             <Link to="/">
               <button className="flex items-center gap-2 text-[#d4af37] hover:text-[#c9a02e] transition-colors mb-8">
                 <ArrowRight className="w-5 h-5" />
                 <span>العودة للرئيسية</span>
               </button>
             </Link>
-
             <div className="flex items-center gap-4 mb-4">
               <Palette className="w-10 h-10 text-[#d4af37]" />
               <h1 className="text-4xl md:text-5xl font-bold">تشكيلة <span className="text-[#d4af37]">الألوان</span></h1>
             </div>
-            <div className="w-24 h-1 bg-[#d4af37] mb-6"></div>
+            <div className="w-24 h-1 bg-[#d4af37] mb-6" />
             <p className="text-xl text-gray-300 max-w-3xl leading-relaxed">
-              أكثر من 25 لون فاخر متوفر بأقمشة عالية الجودة. اختر اللون المثالي الذي يناسب ذوقك وديكور منزلك وتواصل معنا لطلبه.
+              أكثر من 25 لون فاخر متوفر بأقمشة عالية الجودة. اختر اللون المثالي الذي يناسب ذوقك وتواصل معنا لطلبه.
             </p>
           </motion.div>
 
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
             {colors.map((color, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: index * 0.03 }}
-                className="group bg-[#1a1a1a] border border-[#d4af37]/20 hover:border-[#d4af37] rounded-xl overflow-hidden transition-all duration-300 hover:shadow-xl hover:shadow-[#d4af37]/10 hover:-translate-y-1"
-              >
-                <div
-                  className="w-full aspect-square transition-transform duration-300 group-hover:scale-105"
-                  style={{ backgroundColor: color.hex }}
-                />
+              <motion.div key={index} initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: index * 0.03 }}
+                className="group bg-[#1a1a1a] border border-[#d4af37]/20 hover:border-[#d4af37] rounded-xl overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+                <div className="w-full aspect-square transition-transform duration-300 group-hover:scale-105" style={{ backgroundColor: color.hex }} />
                 <div className="p-3">
                   <p className="text-white font-semibold text-sm mb-1">{color.name}</p>
-                  <span className={`text-xs px-2 py-0.5 rounded-full ${categoryColors[color.category] || "bg-gray-500/20 text-gray-300"}`}>
+                  <span className={`text-xs px-2 py-0.5 rounded-full ${categoryColors[color.category] ?? "bg-gray-500/20 text-gray-300"}`}>
                     {color.category}
                   </span>
                   <p className="text-gray-500 text-xs mt-1">{color.hex}</p>
@@ -95,20 +81,12 @@ export default function Colors() {
             ))}
           </div>
 
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5 }}
-            className="mt-16 text-center bg-gradient-to-br from-[#1a1a1a] to-[#0a0a0a] border border-[#d4af37]/20 rounded-xl p-8"
-          >
+          <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}
+            className="mt-16 text-center bg-gradient-to-br from-[#1a1a1a] to-[#0a0a0a] border border-[#d4af37]/20 rounded-xl p-8">
             <h3 className="text-2xl font-bold text-[#d4af37] mb-4">اختر لونك المفضل وتواصل معنا</h3>
             <p className="text-gray-300 mb-6">نوفر لك أي لون تختاره بأقمشة عالية الجودة</p>
-            <a
-              href="https://wa.me/9647881457896"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-3 bg-[#25D366] hover:bg-[#20ba5a] text-white px-8 py-4 rounded-lg font-bold text-lg transition-all duration-300"
-            >
+            <a href="https://wa.me/9647881457896" target="_blank" rel="noopener noreferrer"
+              className="inline-flex items-center gap-3 bg-[#25D366] hover:bg-[#20ba5a] text-white px-8 py-4 rounded-lg font-bold text-lg transition-all">
               اطلب لونك الآن عبر واتساب
             </a>
           </motion.div>

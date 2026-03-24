@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
-import { motion } from "motion/react";
+import { motion } from "framer-motion";
 import { Link } from "wouter";
 import { X, ArrowRight, Upload, Trash2, Plus } from "lucide-react";
 import { ScrollToTop } from "../components/ScrollToTop";
 import { LoadingSpinner } from "../components/LoadingSpinner";
+import { useAuth } from "../context/AuthContext";
 
 const defaultImages = [
   "https://images.unsplash.com/photo-1762803842055-de1e5fb14477?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxsdXh1cnklMjBtb2Rlcm4lMjBzb2ZhJTIwZGFyayUyMGVsZWdhbnR8ZW58MXx8fHwxNzc0MTYzNDc4fDA&ixlib=rb-4.1.0&q=80&w=1080",
@@ -15,7 +16,7 @@ const defaultImages = [
 ];
 
 export default function Gallery() {
-  const isAdmin = sessionStorage.getItem("isAdmin") === "true";
+  const { isAdmin } = useAuth();
   const [images, setImages] = useState<string[]>(defaultImages);
   const [selected, setSelected] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -32,30 +33,23 @@ export default function Gallery() {
 
   const handleUpload = (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
-    if (file) {
-      setIsLoading(true);
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        const newImages = [...images];
-        newImages[index] = reader.result as string;
-        saveImages(newImages);
-        setIsLoading(false);
-      };
-      reader.readAsDataURL(file);
-    }
+    if (!file) return;
+    setIsLoading(true);
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const newImages = [...images];
+      newImages[index] = reader.result as string;
+      saveImages(newImages);
+      setIsLoading(false);
+    };
+    reader.readAsDataURL(file);
   };
 
   const deleteImage = (index: number) => {
-    if (confirm("هل تريد حذف هذه الصورة؟")) {
-      const newImages = images.filter((_, i) => i !== index);
-      saveImages(newImages);
-    }
+    if (confirm("هل تريد حذف هذه الصورة؟")) saveImages(images.filter((_, i) => i !== index));
   };
 
-  const addNewImage = () => {
-    const newImages = [...images, defaultImages[0]];
-    saveImages(newImages);
-  };
+  const addNewImage = () => saveImages([...images, defaultImages[0]]);
 
   return (
     <div className="min-h-screen bg-[#0a0a0a] text-white" dir="rtl">
@@ -64,11 +58,7 @@ export default function Gallery() {
 
       <div className="py-20 px-4">
         <div className="max-w-7xl mx-auto">
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="mb-8"
-          >
+          <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
             <Link to="/">
               <button className="flex items-center gap-2 text-[#d4af37] hover:text-[#c9a02e] transition-colors mb-8">
                 <ArrowRight className="w-5 h-5" />
@@ -76,40 +66,28 @@ export default function Gallery() {
               </button>
             </Link>
             <h1 className="text-4xl md:text-5xl font-bold mb-4">معرض <span className="text-[#d4af37]">أعمالنا</span></h1>
-            <div className="w-24 h-1 bg-[#d4af37] mb-6"></div>
+            <div className="w-24 h-1 bg-[#d4af37] mb-6" />
             <p className="text-xl text-gray-300">جميع أعمالنا المميزة في مكان واحد</p>
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {images.map((image, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: index * 0.05 }}
-                className="group relative overflow-hidden rounded-xl aspect-[4/3] border-2 border-[#d4af37]/20 hover:border-[#d4af37] transition-all duration-300"
-              >
-                <img
-                  src={image}
-                  alt={`عمل ${index + 1}`}
+              <motion.div key={index} initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: index * 0.05 }}
+                className="group relative overflow-hidden rounded-xl aspect-[4/3] border-2 border-[#d4af37]/20 hover:border-[#d4af37] transition-all duration-300">
+                <img src={image} alt={`عمل ${index + 1}`}
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 cursor-pointer"
-                  onClick={() => setSelected(image)}
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                  onClick={() => setSelected(image)} />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
                 {isAdmin && (
                   <>
                     <div className="absolute bottom-4 right-4 z-10">
                       <label className="cursor-pointer bg-[#d4af37] hover:bg-[#c9a02e] text-black px-3 py-2 rounded-lg font-bold text-sm flex items-center gap-2 shadow-xl">
-                        <Upload className="w-4 h-4" />
-                        <span>تحديث</span>
+                        <Upload className="w-4 h-4" />تحديث
                         <input type="file" accept="image/*" onChange={(e) => handleUpload(index, e)} className="hidden" />
                       </label>
                     </div>
                     <div className="absolute bottom-4 left-4 z-10">
-                      <button
-                        onClick={() => deleteImage(index)}
-                        className="bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded-lg font-bold text-sm flex items-center gap-2 shadow-xl"
-                      >
+                      <button onClick={() => deleteImage(index)} className="bg-red-600 hover:bg-red-700 text-white px-3 py-2 rounded-lg font-bold text-sm flex items-center gap-1 shadow-xl">
                         <Trash2 className="w-4 h-4" />
                       </button>
                     </div>
@@ -120,14 +98,9 @@ export default function Gallery() {
                 </div>
               </motion.div>
             ))}
-
             {isAdmin && (
-              <motion.button
-                onClick={addNewImage}
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                className="aspect-[4/3] rounded-xl border-2 border-dashed border-[#d4af37]/40 hover:border-[#d4af37] flex flex-col items-center justify-center gap-3 transition-all duration-300 hover:bg-[#d4af37]/5"
-              >
+              <motion.button onClick={addNewImage} initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }}
+                className="aspect-[4/3] rounded-xl border-2 border-dashed border-[#d4af37]/40 hover:border-[#d4af37] flex flex-col items-center justify-center gap-3 transition-all duration-300 hover:bg-[#d4af37]/5">
                 <Plus className="w-10 h-10 text-[#d4af37]" />
                 <span className="text-[#d4af37] font-bold">إضافة صورة جديدة</span>
               </motion.button>
@@ -141,12 +114,7 @@ export default function Gallery() {
           <button onClick={() => setSelected(null)} className="absolute top-4 right-4 z-50 bg-[#d4af37] hover:bg-[#c9a02e] text-black p-3 rounded-full">
             <X className="w-6 h-6" />
           </button>
-          <img
-            src={selected}
-            alt="عمل مميز"
-            className="max-w-full max-h-[85vh] object-contain rounded-lg"
-            onClick={(e) => e.stopPropagation()}
-          />
+          <img src={selected} alt="عمل مميز" className="max-w-full max-h-[85vh] object-contain rounded-lg" onClick={e => e.stopPropagation()} />
         </div>
       )}
     </div>
