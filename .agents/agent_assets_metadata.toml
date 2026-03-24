@@ -1,0 +1,8 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "QZRMKDO_y_nqpV1oP2WZQ"
+uri = "file://sofa-store.zip"
+type = "unspecified"
+title = "sofa-store.zip — ملفات الموقع كاملة"
