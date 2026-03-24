@@ -16,6 +16,19 @@ pnpm workspace monorepo using TypeScript. Each package manages its own dependenc
 - **API codegen**: Orval (from OpenAPI spec)
 - **Build**: esbuild (CJS bundle)
 
+## Artifacts
+
+### `artifacts/sofa-store` — Luxury Sofa & Furniture Store (Arabic)
+
+A luxury sofa/furniture business website in Arabic (RTL). Features:
+- **Home page** with hero, features, gallery preview, color showcase, services, testimonials, CTA, and contact sections
+- **Gallery page** with full image grid and lightbox
+- **Colors page** showcasing 25+ fabric color swatches
+- **Admin panel** — accessible via Ctrl+Shift+A or 5 secret clicks on the footer copyright text (password: `admin2024`). Allows editing hero text, gallery images, and deleting testimonials.
+- **Customer testimonials** — visitors can add their own reviews
+- All data persisted in `localStorage`
+- WhatsApp/phone contact links and social media links to TikTok, Facebook, Instagram
+
 ## Structure
 
 ```text
